@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ "$#" -ne 1 ]; then
+  printf 'uso: markitdown-local <archivo-local>\n' >&2
+  exit 2
+fi
+
+input="$1"
+case "$input" in
+  *://*|http:*|https:*|ftp:*)
+    printf 'solo se admiten archivos locales\n' >&2
+    exit 2
+    ;;
+esac
+
+path="$(realpath -e -- "$input")"
+if [ ! -f "$path" ] || [ ! -r "$path" ]; then
+  printf 'el archivo debe existir, ser regular y legible\n' >&2
+  exit 2
+fi
+
+name="${path##*/}"
+extension="${name##*.}"
+extension="${extension,,}"
+case "$extension" in
+  pdf|docx|xlsx|pptx)
+    ;;
+  *)
+    printf 'formato no permitido: %s\n' "$extension" >&2
+    exit 2
+    ;;
+esac
+
+# Raíz del stack: derivada de la ubicación del script, sin rutas hardcodeadas.
+AISTACK_HOME="${AISTACK_HOME:-$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )}"
+BIN="$AISTACK_HOME/vendor/markitdown/.venv/bin/markitdown"
+
+# El venv son dependencias instalables: no se versiona, así que puede no estar.
+if [ ! -x "$BIN" ]; then
+  if command -v markitdown >/dev/null 2>&1; then
+    exec markitdown "$path"
+  fi
+  cat >&2 <<EOF
+markitdown no está instalado. Instalalo una vez:
+
+  python3 -m venv "$AISTACK_HOME/vendor/markitdown/.venv"
+  "$AISTACK_HOME/vendor/markitdown/.venv/bin/pip" install --quiet markitdown
+
+(o instalá markitdown en el PATH del sistema: pip install markitdown)
+EOF
+  exit 127
+fi
+
+exec "$BIN" "$path"

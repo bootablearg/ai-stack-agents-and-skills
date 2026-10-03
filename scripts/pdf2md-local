@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Convierte un PDF local a Markdown preservando el layout (columnas, tablas y
+# jerarquía de encabezados) via pymupdf4llm. Complementa markitdown-local:
+# usá este para PDFs con diseño complejo; markitdown para DOCX/XLSX/PPTX y PDFs
+# simples. Emite el Markdown por stdout.
+
+if [ "$#" -ne 1 ]; then
+  printf 'uso: pdf2md-local <archivo.pdf>\n' >&2
+  exit 2
+fi
+
+input="$1"
+case "$input" in
+  *://*|http:*|https:*|ftp:*)
+    printf 'solo se admiten archivos locales\n' >&2
+    exit 2
+    ;;
+esac
+
+path="$(realpath -e -- "$input")"
+if [ ! -f "$path" ] || [ ! -r "$path" ]; then
+  printf 'el archivo debe existir, ser regular y legible\n' >&2
+  exit 2
+fi
+
+name="${path##*/}"
+extension="${name##*.}"
+extension="${extension,,}"
+if [ "$extension" != "pdf" ]; then
+  printf 'formato no permitido: %s (pdf2md-local solo convierte PDF)\n' "$extension" >&2
+  exit 2
+fi
+
+# Raíz del stack: derivada de la ubicación del script, sin rutas hardcodeadas.
+AISTACK_HOME="${AISTACK_HOME:-$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )}"
+PY="$AISTACK_HOME/vendor/pymupdf4llm/.venv/bin/python"
+
+# El venv son dependencias instalables: no se versiona, así que puede no estar.
+if [ ! -x "$PY" ]; then
+  cat >&2 <<EOF
+pymupdf4llm no está instalado. Instalalo una vez:
+
+  python3 -m venv "$AISTACK_HOME/vendor/pymupdf4llm/.venv"
+  "$AISTACK_HOME/vendor/pymupdf4llm/.venv/bin/pip" install --quiet pymupdf4llm
+EOF
+  exit 127
+fi
+
+exec "$PY" - "$path" <<'PYEOF'
+import sys, pymupdf4llm
+sys.stdout.reconfigure(encoding="utf-8")
+sys.stdout.write(pymupdf4llm.to_markdown(sys.argv[1]))
+PYEOF

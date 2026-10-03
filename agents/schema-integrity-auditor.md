@@ -1,0 +1,1 @@
+../vendor/claude-db/agents/schema-integrity-auditor.md

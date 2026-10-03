@@ -1,0 +1,85 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    21 SKILLS INSTALLED — SUMMARY                          ║
+║                                                                            ║
+║ Total: 21 skills | Mandatory: 11 | Optional: 10 | In Hooks: 6            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🔴 IN USE FROM HOOKS (6 skills) — AUTOMATIC EXECUTION                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+PRE-COMMIT HOOK (git commit)
+  1. zoom-out           ➜ Entender contexto del sistema
+  2. diagnose           ➜ Bug diagnosis loop sistemático
+
+PRE-PUSH HOOK (git push)
+  3. git-guardrails-claude-code  ➜ Bloquea push --force, reset --hard, etc.
+  4. triage                       ➜ State-machine classification (REVIEW→CLOSED)
+  5. grill-me                     ➜ Exhaustive questioning (5 preguntas)
+
+COMMIT-MSG HOOK (git commit)
+  6. to-prd             ➜ Conventional commits (feat|fix|docs|...)
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🟢 MANUAL INVOCATION (15 skills) — /skill nombre                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+MANDATORY (8 skills):
+  7. tdd                              ➜ Red-green-refactor loop
+  8. grill-with-docs                  ➜ Design grilling + CONTEXT.md updates
+  9. improve-codebase-architecture    ➜ Refactoring + "deletion test"
+ 10. to-issues                        ➜ GitHub issues + dependency ordering
+ 11. prototype                        ➜ Throwaway UI/state validation
+ 12. write-a-skill                    ➜ Create reusable patterns
+
+OPTIONAL (7 skills):
+ 13. handoff                          ➜ Compact conversation for handoff
+ 14. setup-pre-commit                 ➜ Husky hooks: lint-staged, Prettier, tests
+ 15. scaffold-exercises               ➜ Training content structure
+ 16. migrate-to-shoehorn              ➜ TypeScript test type-safety
+ 17. setup-matt-pocock-skills         ➜ Initial repo configuration
+ 18. playwright-best-practices        ➜ E2E testing patterns
+ 19. web-design-guidelines            ➜ UI/UX audit (WCAG, usability)
+ 20. webapp-testing                   ➜ Manual exploratory testing
+ 21. seo-audit                        ➜ Landing page SEO audit
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║ QUICK WORKFLOWS                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Bug Fix:
+  1. /skill zoom-out
+  2. /skill diagnose
+  3. /skill tdd
+  [git-guardrails automatic]
+
+Feature Development:
+  1. /skill zoom-out
+  2. /skill to-prd
+  3. /skill prototype
+  4. /skill tdd
+  5. /skill to-issues
+  [grill-me + git-guardrails automatic]
+
+Refactoring:
+  1. /skill improve-codebase-architecture
+  2. /skill grill-with-docs
+  3. /skill tdd
+  [git-guardrails automatic]
+
+Multi-Env Deployment:
+  1. /skill triage
+  2. /skill to-issues
+  3. /skill grill-me
+  [git-guardrails automatic]
+
+Design Decision:
+  1. /skill grill-with-docs
+  2. /skill prototype
+  3. /skill web-design-guidelines
+  4. /skill to-prd
+
+═══════════════════════════════════════════════════════════════════════════════
+Status: ✅ Todos los 21 skills instalados y operacionales
+Disabled: ❌ caveman (requiere configuración manual excesiva)
+═══════════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,1 @@
+../vendor/ecc-skills/agents/django-reviewer.md

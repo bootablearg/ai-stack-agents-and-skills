@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Ejecuta el CLI `@google/design.md` sobre un archivo DESIGN.md local.
+#
+# Qué hace cada comando:
+#   lint   <archivo>            revisa el archivo y avisa de los problemas
+#                               (contraste bajo la norma AA, tokens definidos
+#                               que ningún componente usa, estructura inválida)
+#   diff   <viejo> <nuevo>      compara dos archivos y muestra qué cambió
+#   export <archivo> --format … convierte los tokens a otro formato:
+#                               css-tailwind (Tailwind v4 @theme),
+#                               json-tailwind (Tailwind v3),
+#                               dtcg (W3C Design Tokens), css-vars
+#   spec                        imprime la definición del formato DESIGN.md
+#
+# No usa ningún modelo de lenguaje ni sale a la red: es determinista y no
+# consume presupuesto de tokens. La versión está fijada en
+# vendor/design-md-cli/package.json.
+
+AISTACK_HOME="${AISTACK_HOME:-$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )}"
+CLI="$AISTACK_HOME/vendor/design-md-cli/node_modules/.bin/design.md"
+
+if [ "$#" -eq 0 ]; then
+  printf 'uso: designmd-local <lint|diff|export|spec> [argumentos]\n' >&2
+  printf 'ejemplos:\n' >&2
+  printf '  designmd-local lint ./DESIGN.md\n' >&2
+  printf '  designmd-local export ./DESIGN.md --format css-tailwind\n' >&2
+  printf '  designmd-local spec\n' >&2
+  exit 2
+fi
+
+if [ ! -x "$CLI" ]; then
+  cat >&2 <<EOF
+El CLI de design.md no está instalado. Instalalo una vez:
+
+  cd "$AISTACK_HOME/vendor/design-md-cli" && npm install
+
+EOF
+  exit 127
+fi
+
+exec "$CLI" "$@"

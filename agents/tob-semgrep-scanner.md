@@ -1,0 +1,1 @@
+../vendor/trailofbits-skills/plugins/static-analysis/agents/semgrep-scanner.md
