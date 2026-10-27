@@ -1,6 +1,6 @@
 # GStack Catalog — cerebro compartido (.ai-stack/gstack)
 
-> ⚙️ AUTO-GENERADO por `scripts/gen-catalogs.sh` el 2026-10-03.
+> ⚙️ AUTO-GENERADO por `scripts/gen-catalogs.sh` el 2026-10-27.
 > GStack = pipelines de orquestación (plan→build→QA→deploy) y tools de diseño/review. Ver `MANIFEST.md`.
 
 | Tool | Descripción |

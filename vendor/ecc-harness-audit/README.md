@@ -9,7 +9,7 @@ Persistence, Eval Coverage, Security Guardrails, Cost Efficiency y las integraci
 deploy (GitHub/Vercel/Netlify/Cloudflare/Fly).
 
 ```bash
-node /home/.ai-stack/vendor/ecc-harness-audit/harness-audit.js --root <dir>
+node $AISTACK_HOME/vendor/ecc-harness-audit/harness-audit.js --root <dir>
 ```
 
 ## Por qué NO se convirtió en skill

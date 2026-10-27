@@ -10,7 +10,8 @@
 #   ai-start.sh copilot "revisá esta función"
 #   ai-start.sh codex --rw "aplicá la migración"   # Codex con permiso de escritura
 #
-# Por defecto Codex arranca en SOLO LECTURA (-s read-only). Con --rw escribe.
+# Por defecto Codex arranca en SOLO LECTURA (-s read-only). Con --rw escribe en el directorio
+# de trabajo (-s workspace-write): pararse en la carpeta que corresponda antes de llamarlo.
 # Ver: /skill memory · .ai-stack/AGENTS.md § Memoria compartida
 set -uo pipefail
 
@@ -80,7 +81,10 @@ fi
 case "$HARNESS" in
   codex)
     if [ "$RW" -eq 1 ]; then
-      exec codex exec --skip-git-repo-check "$FULL_PROMPT"
+      # 🔴 El modo va explícito: sin `-s`, `codex exec` arranca en sólo lectura y `--rw` no
+      #    escribía nada, aunque el comando salía con 0 (2026-10-13). `workspace-write`
+      #    deja escribir en el directorio de trabajo, no en todo el disco.
+      exec codex exec -s workspace-write --skip-git-repo-check "$FULL_PROMPT"
     else
       exec codex exec -s read-only --skip-git-repo-check "$FULL_PROMPT"
     fi

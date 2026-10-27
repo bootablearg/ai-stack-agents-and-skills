@@ -19,8 +19,8 @@ le llega a todos.
 
 | | |
 |---|---|
-| **446 skills** | Playbooks invocables: auditoría de seguridad, SEO, marketing, frontend, context engineering, documentación, traducción… |
-| **232 agentes** | Subagentes especialistas en formato Claude subagent, con adaptadores para otros asistentes |
+| **447 skills** | Playbooks invocables: auditoría de seguridad, SEO, marketing, frontend, context engineering, documentación, traducción… |
+| **233 agentes** | Subagentes especialistas en formato Claude subagent, con adaptadores para otros asistentes |
 | **2 protocolos** | `@protocol-enforce` abre una tarea; `@protocol-end` la cierra y la documenta |
 | **3 hooks** | Inyección de memoria compartida · enforcement anti-adulación · deuda de documentación |
 

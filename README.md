@@ -18,8 +18,8 @@ assistant and readable by every user on the machine. Update it once; everyone ge
 
 | | |
 |---|---|
-| **446 skills** | Invocable playbooks: security auditing, SEO, marketing, frontend, context engineering, documentation, translation… |
-| **232 agents** | Specialist subagents in Claude subagent format, with adapters for other assistants |
+| **447 skills** | Invocable playbooks: security auditing, SEO, marketing, frontend, context engineering, documentation, translation… |
+| **233 agents** | Specialist subagents in Claude subagent format, with adapters for other assistants |
 | **2 protocols** | `@protocol-enforce` opens a task; `@protocol-end` closes and documents it |
 | **3 hooks** | Shared memory injection · anti-sycophancy enforcement · documentation-debt tracking |
 

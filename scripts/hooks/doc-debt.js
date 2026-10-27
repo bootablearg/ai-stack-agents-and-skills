@@ -48,6 +48,10 @@ const RUIDO = [
   // `skills/synced/` lo escribe el propio cliente al sincronizar skills de la cuenta:
   // aparece con cientos de archivos y no lo tocó ninguna persona.
   /(^|\/)skills\/synced\//,
+  // `skills-opencode/` es una vista GENERADA (gen-opencode-skills.py): un enlace por skill.
+  // Los que apuntan a `skills/synced/` traían cientos de archivos como deuda falsa; los demás
+  // se siguen detectando por su ruta real en `skills/`. (2026-10-27)
+  /(^|\/)skills-opencode\//,
 ];
 
 // Lo que escribe el propio cierre no cuenta como deuda nueva.

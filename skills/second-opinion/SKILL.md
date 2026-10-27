@@ -1,6 +1,6 @@
 ---
 name: second-opinion
-description: Consultar a Codex, Gemini o Copilot como par para una segunda opinión, revisión o enfoque alternativo. Usar en decisiones de arquitectura no triviales, revisión de cambios riesgosos, o cuando el usuario pide que "opine otro modelo".
+description: Consultar a Codex, DSH (DeepSeek Harness), Gemini o Copilot como par para una segunda opinión, revisión o enfoque alternativo. Usar en decisiones de arquitectura no triviales, revisión de cambios riesgosos, o cuando el usuario pide que "opine otro modelo".
 ---
 
 # Second Opinion — consultar a otro modelo
@@ -32,6 +32,10 @@ gemini -p "<consulta>"        # headless: no escribe sin -y/--yolo
 
 # Copilot (GitHub) — segunda opinión orientada a código
 copilot -p "<consulta>"
+
+# DSH (DeepSeek Harness) — alternativa paralela a Codex; reemplazo cuando Codex no tiene cuota.
+# Sin sandbox de sólo lectura: la consigna de no escribir va en el pedido, sobre una copia con git.
+dsh headless - < pedido.md > respuesta.md 2> diagnostico.log
 ```
 
 ## Buenas prácticas

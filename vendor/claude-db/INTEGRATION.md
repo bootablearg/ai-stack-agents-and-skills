@@ -1,6 +1,6 @@
 # Integración de Claude DB — Multi-AI
 
-**Archivo:** `/home/.ai-stack/vendor/claude-db/INTEGRATION.md`  
+**Archivo:** `$AISTACK_HOME/vendor/claude-db/INTEGRATION.md`  
 **Versión:** 0.1.0 (julio 2026)  
 **Audiencia:** Desarrolladores, DevOps, Arquitectos de datos en Claude Code, Codex CLI, Gemini, Copilot CLI  
 
@@ -8,14 +8,14 @@
 
 ## Resumen Rápido
 
-Claude DB está **instalado globalmente** en `/home/.ai-stack/vendor/claude-db/` y es accesible desde cuatro asistentes de IA:
+Claude DB está **instalado globalmente** en `$AISTACK_HOME/vendor/claude-db/` y es accesible desde cuatro asistentes de IA:
 
 | Asistente | Cómo invocar | Modo |
 |-----------|--------------|------|
 | **Claude Code** | `/claude-db:<comando>` | Plugin auto-descubierto; skill invocable |
 | **Codex CLI** | `/skill claude-db` o agentes vía `agent claude-db-migration-writer` | Markdown portable; CLI heredado de skills/agents |
-| **Gemini CLI** | `/skill claude-db` (idem) | Heredado vía `~/.gemini/GEMINI.md` → `/home/.ai-stack/AGENTS.md` |
-| **Copilot CLI** | `/skill claude-db` (idem) | Heredado vía `/workspace/AGENTS.md` → `/home/.ai-stack/AGENTS.md` |
+| **Gemini CLI** | `/skill claude-db` (idem) | Heredado vía `~/.gemini/GEMINI.md` → `$AISTACK_HOME/AGENTS.md` |
+| **Copilot CLI** | `/skill claude-db` (idem) | Heredado vía `/workspace/AGENTS.md` → `$AISTACK_HOME/AGENTS.md` |
 
 ---
 
@@ -64,10 +64,10 @@ Codex **no tiene plugins nativos**, pero accede a claude-db vía markdown portab
 
 ### Setup
 
-El `~/.codex/skills` es un symlink que apunta a `/home/.ai-stack/skills`:
+El `~/.codex/skills` es un symlink que apunta a `$AISTACK_HOME/skills`:
 ```bash
-~/.codex/skills -> /home/.ai-stack/skills
-~/.codex/AGENTS.md -> /home/.ai-stack/AGENTS.md
+~/.codex/skills -> $AISTACK_HOME/skills
+~/.codex/AGENTS.md -> $AISTACK_HOME/AGENTS.md
 ```
 
 Codex lee los `.md` del brain compartido (mismo que Claude Code).
@@ -106,7 +106,7 @@ Gemini accede a claude-db igual que Codex.
 ### Setup
 
 ```bash
-~/.gemini/GEMINI.md -> /home/.ai-stack/AGENTS.md
+~/.gemini/GEMINI.md -> $AISTACK_HOME/AGENTS.md
 ```
 
 ### Invocación
@@ -130,7 +130,7 @@ Copilot también tiene acceso vía el brain compartido.
 ### Setup
 
 ```bash
-$WORKSPACE/AGENTS.md -> /home/.ai-stack/AGENTS.md
+$WORKSPACE/AGENTS.md -> $AISTACK_HOME/AGENTS.md
 ```
 
 ### Invocación

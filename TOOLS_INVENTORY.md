@@ -71,11 +71,14 @@ skill-creator, etc.) sí son markdown legible por todos, pero los maneja la sinc
 │   └── markitdown/ · pymupdf4llm/ · graphify/   (venvs aislados)
 └── scripts/
     ├── gen-catalogs.sh        ← regenera los 3 catálogos (correr al agregar/quitar)
+    ├── gen-proyectos.py       ← índice de proyectos PROYECTOS.md (workspace + brain)
+    ├── gen-opencode-skills.py ← vista plana skills-opencode/ (la llama gen-catalogs.sh)
     ├── ai-start.sh            ← arranca codex/gemini/copilot con memoria y reglas cargadas
     ├── agents-up.sh
     ├── markitdown-local · pdf2md-local · graphify-local · designmd-local
     ├── graphify-safe-sync.js
     ├── sync-opencode-plugin.sh + plugins/protocol-enforce.js (plugin único de OpenCode)
+    ├── setup-users.sh         ← cablea las cuentas del grupo aistack al cerebro compartido
     └── hooks/
         ├── memory-session-start.js  ← SessionStart de Claude: inyecta la memoria
         ├── anti-sycophancy.js       ← Stop/SubagentStop: rechaza adulación y slop
@@ -98,6 +101,13 @@ skill-creator, etc.) sí son markdown legible por todos, pero los maneja la sinc
 (dos revisores independientes deben aprobar)
 
 ### 💻 Desarrollo general, calidad y testing
+**Estándar obligatorio:** `engineering-standards` (Clean Code · SOLID · patrones · Clean Architecture, niveles N1/N2/N3) + agente `standards-reviewer`. Se carga antes de escribir código; ver `AGENTS.md` § Estándar de código.
+Desde el 2026-10-13 suma la **puerta de calidad** y cuatro referencias: `toolchain.md` (formateador,
+analizador/tipos y modernizador por stack), `plan-de-calidad.md` (normalización integral en 8 etapas),
+`app-nueva.md` (esqueleto obligatorio) y `roles-agentes.md` (Codex implementa, DSH revisa, Claude audita).
+Su `BRIEF.md` se inyecta al arrancar los cinco asistentes, y 50 agentes que generan código traen el
+bloque `<!-- engineering-standards:obligatorio -->`.
+
 `test-driven-development` · `tdd` · `tdd-workflow` · `incremental-implementation` ·
 `source-driven-development` · `code-review-and-quality` · `code-simplification` ·
 `improve-codebase-architecture` · `api-and-interface-design` · `api-design` · `backend-patterns` ·
@@ -182,10 +192,11 @@ aprendidas con confianza; observador apagado) · familia *context engineering*:
 
 | Hook | Asistente | Qué hace |
 |---|---|---|
-| `memory-session-start.js` | Claude Code (`SessionStart`) | Inyecta handoffs + memoria del proyecto + global + deuda de documentación. Siempre `exit 0` |
+| `memory-session-start.js` | Claude Code (`SessionStart`) | Inyecta deuda de documentación + resumen del estándar de código (`engineering-standards/BRIEF.md`, `AISTACK_STANDARDS=0` lo apaga) + handoffs + memoria del proyecto y global. Siempre `exit 0` |
 | `anti-sycophancy.js` | Claude Code (`Stop`, `SubagentStop`) | Rechaza la respuesta con adulación o slop. `AISTACK_ANTISYC=0` / `AISTACK_STOPSLOP=0` |
 | `plugins/protocol-enforce.js` | OpenCode (4 usuarios) | Mismo bloque de contexto + limpieza de adulación. Se propaga con `sudo scripts/sync-opencode-plugin.sh` |
 | `ai-start.sh` | Codex · Gemini · Copilot | Antepone memoria y reglas al prompt (no tienen hooks propios) |
+| `scripts/setup-users.sh` | Las 4 cuentas | Cablea cada cuenta del grupo `aistack` al cerebro compartido: symlinks de Claude Code, Codex, Gemini, OpenCode, Hermes, `.dsh/AGENTS.md` (sólo si la cuenta ya usa DSH) y `$WORKSPACE/AGENTS.md`. Idempotente, `--dry-run`, exige root y crea con `sudo -u` para no dejar `root:root`. Correr tras sumar una cuenta |
 
 **No hay git hooks que corran skills.** (El inventario anterior decía que sí; se verificó el
 2026-09-28: no existe `core.hooksPath` ni hooks en los repos.)
@@ -204,6 +215,7 @@ Invocación: `"Activate <Agente> mode"` · `"<Agente>, <tarea>"` · o como subag
 | **claude-db** (6) | schema-integrity / performance-scale / migration-safety / nosql-paradigm / specialized-platform auditors + db-migration-writer |
 | **tob** (7) | auditores de Trail of Bits (§3 Ciberseguridad) |
 | **ecc** (4) | network-config-reviewer, php-reviewer, django-reviewer, healthcare-reviewer |
+| **estándar** (1) | standards-reviewer — revisa un diff N2/N3 contra `engineering-standards`, sólo lectura |
 | marketing · seo · sales · paid-media | growth-hacker, content-creator, seo-technical, ppc-strategist, deal-strategist |
 | design · product · project-mgmt | ui-designer, ux-architect, product-manager, senior-project-manager |
 | specialized · finance · legal · healthcare | compliance-auditor, mcp-builder, financial-analyst, legal-*, healthcare-* |
@@ -224,6 +236,7 @@ Invocación: `"Activate <Agente> mode"` · `"<Agente>, <tarea>"` · o como subag
 | Deuda de documentación | `node $AISTACK_HOME/scripts/hooks/doc-debt.js check|status|record-close <proyecto>` |
 | Alcance de la sesión | `node $AISTACK_HOME/scripts/hooks/session-scope.js --since "<inicio>"` |
 | Regenerar catálogos | `bash $AISTACK_HOME/scripts/gen-catalogs.sh` |
+| Índice de proyectos (qué es, estado, límites) | `python3 $AISTACK_HOME/scripts/gen-proyectos.py` · `--check` sólo verifica |
 
 **Imágenes** (paquetes de sistema del host): ImageMagick 6.9.11 (`convert`, `identify`,
 `montage`) y Pillow 9.4.0. Si un proyecto necesita otra versión de Pillow, va en un venv propio.
@@ -238,6 +251,11 @@ Invocación: `"Activate <Agente> mode"` · `"<Agente>, <tarea>"` · o como subag
 
 **Codex:** `/usr/bin/codex`, config `~/.codex/config.toml`, handoff en `.ai-stack/codex/`. Codex
 produce y ejecuta; Claude audita (ciclo de 4 pasos en `AGENTS.md`).
+
+**DSH (DeepSeek Harness):** `/usr/local/bin/dsh`, alternativa paralela a Codex desde el
+2026-10-10. `dsh headless "<pedido>"` resuelve una tarea y termina; sin sandbox de sólo
+lectura, así que la consigna va en el pedido y se corre sobre una copia con git. Detalle y
+gotchas en `AGENTS.md` § DSH.
 
 ---
 
@@ -257,12 +275,19 @@ Se regeneran con `bash $AISTACK_HOME/scripts/gen-catalogs.sh`, leyendo el frontm
 
 | Necesito… | Uso |
 |-----------|-----|
+| Saber en qué proyecto va un tema | `$WORKSPACE/PROYECTOS.md`, sección «Límites» |
 | Entender un área de código nueva | `/skill zoom-out` |
 | Cazar un bug difícil | `/skill diagnose` |
 | Validar un plan | `/skill grill-me` / `grill-with-docs` |
 | Qué especialista usar | `/skill route-specialist` |
 | Convertir charla en spec | `/skill to-prd` → `/skill to-issues` |
 | Feature con tests | `/skill tdd` / `test-driven-development` / `tdd-workflow` |
+| Escribir, editar o delegar código (cualquier stack) | `/skill engineering-standards` + agente `standards-reviewer` en N2/N3 |
+| Normalizar una app existente sin cambiar comportamiento | `engineering-standards/references/plan-de-calidad.md` + `toolchain.md` |
+| Arrancar una app nueva | `engineering-standards/references/app-nueva.md` |
+| Lint de Go | `golangci-lint` v2.14.0 global en el servidor de CI (`/usr/local/bin`); plantilla en `stacks/go.md` |
+| App Next.js / TypeScript / Node | `engineering-standards/stacks/nextjs.md` (capas, ESLint, dependency-cruiser); Node 22.22.2 global en el servidor de CI y en los servidores de app |
+| Esquema, migraciones y RLS en PostgreSQL | `engineering-standards/stacks/postgres.md` |
 | Revisar Laravel antes de mergear | `/skill laravel-verification` + `laravel-security` + agente `php-reviewer` |
 | Revisar Django antes de mergear | `/skill django-verification` + `django-security` + agente `django-reviewer` |
 | Tareas en segundo plano con Celery | `/skill django-celery` |

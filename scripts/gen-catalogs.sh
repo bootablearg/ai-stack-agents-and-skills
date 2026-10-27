@@ -139,4 +139,6 @@ for d in "$GS"/*/; do
 done
 } > "$OUT"
 echo "✅ $OUT ($(grep -c '^| `' "$OUT") tools)"
+# Vista plana para OpenCode (un enlace por nombre de skill): evita los "duplicate skill name".
+python3 "$ROOT/scripts/gen-opencode-skills.py"
 echo "Listo — catálogos regenerados ($TODAY)."

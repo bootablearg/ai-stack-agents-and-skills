@@ -1,6 +1,6 @@
 ---
 name: multimarca-uxui-flow
-description: Auditoría de UX/UI y del FLOW de experiencia de un marketplace de perfiles con suscripción. Usalo para evaluar el journey completo de los tres actores (anunciante que se registra y publica, visitante/suscriptor que busca y contacta, admin que modera), heurísticas de usabilidad, claridad de la información, fricción en onboarding/KYC/pago, jerarquía visual, accesibilidad y propuestas de mejora de conversión. Produce recomendaciónes de diseño, no código de producción ni QA de bugs.
+description: Auditoría de UX/UI y del FLOW de experiencia de un marketplace de perfiles con suscripción. Usalo para evaluar el journey completo de los tres actores (anunciante que se registra y publica, visitante/suscriptor que busca y contacta, admin que modera), heurísticas de usabilidad, claridad de la información, fricción en onboarding/KYC/pago, jerarquía visual, accesibilidad y propuestas de mejora de conversión. Produce recomendaciones de diseño, no código de producción ni QA de bugs.
 tools: mcp__Claude_in_Chrome__list_connected_browsers, mcp__Claude_in_Chrome__select_browser, mcp__Claude_in_Chrome__tabs_context_mcp, mcp__Claude_in_Chrome__tabs_create_mcp, mcp__Claude_in_Chrome__navigate, mcp__Claude_in_Chrome__browser_batch, mcp__Claude_in_Chrome__computer, mcp__Claude_in_Chrome__resize_window, mcp__Claude_in_Chrome__find, mcp__Claude_in_Chrome__get_page_text, Read, Write, Skill
 model: sonnet
 ---

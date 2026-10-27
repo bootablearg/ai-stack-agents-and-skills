@@ -95,7 +95,16 @@ haya copiado todo bien. Dos consecuencias:
 - `$HOME/.workspace/brain/` es una **capa liviana** con índices y resúmenes acotados por proyecto.
 - Regla de lectura: proyecto real primero, resumen después.
 - Regla de escritura: nunca duplicar carpetas completas ni documentación viva dentro de `brain`.
-- Cuando aparezca un proyecto nuevo bajo `$WORKSPACE`, crear su carpeta en `brain` con `summary.md` y agregarlo al índice.
+- **Índice de proyectos: `$WORKSPACE/PROYECTOS.md`** (copia idéntica en `brain/PROYECTOS.md`). Dice qué es
+  cada proyecto, su estado y sus **límites**: qué temas van ahí y cuáles no. Antes de escribir una bitácora,
+  confirmá ahí que el tema es de ese proyecto. Lo genera `python3 $AISTACK_HOME/scripts/gen-proyectos.py`
+  desde la cabecera YAML de cada `{proyecto}/.agent-zero/memory-bank/projectbrief.md`: no se edita a mano.
+- Proyecto nuevo bajo `$WORKSPACE`: escribir la cabecera de su `projectbrief.md` y correr el generador, que
+  crea su `brain/{proyecto}/summary.md` si falta (nunca pisa uno existente).
+  Si la carpeta no puede llevar archivos propios (código de un tercero, carpeta de un cliente), la
+  cabecera va en `$WORKSPACE/.proyectos.d/<carpeta>.md`, con el mismo formato.
+- **Credenciales:** `$WORKSPACE/credentials/README.md` indica qué archivo abrir para cada sistema. Los valores
+  se leen al usarlos; no se copian ni se muestran.
 
 ---
 
@@ -174,7 +183,47 @@ claro qué agente(s) usar o en qué orden, correr primero `/skill route-speciali
 
 ---
 
-## 🤝 Delegación y Segunda Opinión — Codex / Gemini / Copilot
+## 🏛️ Estándar de código — Clean Code · SOLID · Patrones · Clean Architecture
+
+Rige para **todo código** que escriba un asistente, en cualquier proyecto y lenguaje,
+sin importar el tamaño del equipo ni de la aplicación. Detalle en `/skill engineering-standards`.
+
+1. **Antes de escribir, editar o delegar código, cargar `/skill engineering-standards`**
+   y leer el archivo de su stack (`stacks/laravel.md`, `django.md`, `go.md`,
+   `wordpress.md`, `scripts.md`).
+2. **El rigor es proporcional y está tabulado**: N1 script, N2 módulo, N3 aplicación.
+   Los principios rigen siempre; las capas y los patrones, sólo en el nivel que los pide.
+   Ante la duda, el nivel más bajo. Un patrón sin una fuerza concreta que lo justifique
+   es un defecto.
+3. **Todo plan de la Regla #1 que toque código incluye la declaración de 5 líneas**:
+   Nivel · Ubicación · Responsabilidad · Patrón (o "ninguno") · Dependencias nuevas.
+   Sin esa declaración, el plan está incompleto.
+4. **Cambios N2 y N3 pasan por el agente `standards-reviewer`** antes de darse por
+   terminados. Su veredicto (APRUEBA / CORREGIR / BLOQUEA) va en el reporte al usuario.
+5. **Al delegar código** (subagente, Codex, Gemini, Copilot), el prompt ordena cargar el
+   skill e incluye la declaración del punto 3.
+6. **Código existente**: todo lo nuevo cumple; en lo viejo se mejora sólo lo que la tarea
+   toca. Un refactor más grande es un plan aparte y necesita su propio "sí" (Regla #3).
+7. La convención del framework manda sobre la pureza teórica. Toda desviación del
+   estándar se documenta en un ADR del proyecto.
+8. **Puerta de calidad por commit** (desde el 2026-10-13): formateador limpio, analizador y
+   tipos sin hallazgos nuevos, tests en verde, refactor sin cambio de comportamiento y
+   veredicto de `standards-reviewer` en N2/N3. Las herramientas de cada stack están en
+   `references/toolchain.md` del skill.
+9. **Roles**: Codex implementa lotes, DSH los revisa en forma adversarial (o al revés) y
+   Claude diseña y audita. Quien implementa un lote no lo revisa
+   (`references/roles-agentes.md`).
+10. **App nueva** nace con lint, tipos estrictos, tests, CI/CD y `vX.Y.Z`
+    (`references/app-nueva.md`). Normalizar una app entera sigue
+    `references/plan-de-calidad.md`, etapa por etapa y con un "sí" por etapa.
+
+El resumen de todo esto (`skills/engineering-standards/BRIEF.md`) se inyecta al arrancar
+Claude Code, OpenCode y el wrapper `ai-start.sh`. DSH lee este archivo vía
+`~/.dsh/AGENTS.md`: **antes de escribir código, leé el `BRIEF.md`**.
+
+---
+
+## 🤝 Delegación y Segunda Opinión — Codex / DSH / Gemini / Copilot
 
 Los cuatro asistentes son **pares**. Consultarse entre sí sirve para dos cosas que no hay
 que mezclar: pedir **una opinión** y **descargar trabajo**. La segunda es la que cuida el
@@ -245,8 +294,35 @@ codex exec -s read-only --skip-git-repo-check "<solo análisis, sin tocar nada>"
 codex exec --skip-git-repo-check "<consulta o tarea>"
 gemini -p "<consulta>" # headless: no escribe sin -y/--yolo
 copilot -p "<consulta>"
+dsh headless "<consulta>" # DeepSeek Harness; `-` lee el pedido de stdin
 ```
 (`--skip-git-repo-check` hace falta fuera de un repo git.)
+
+### DSH (DeepSeek Harness) — alternativa paralela a Codex
+
+Desde el 2026-10-10, **DSH cubre lo mismo que Codex** en el ciclo de delegación y en las
+revisiones de la tabla de abajo: revisión adversarial, segunda opinión, batch delegado.
+Usalo **en paralelo** cuando convenga una segunda mirada distinta, y **en lugar** de
+Codex cuando la cuota de ChatGPT esté agotada o por agotarse (Codex responde con
+`You've hit your usage limit`).
+
+```bash
+dsh headless - < pedido.md > respuesta.md 2> diagnostico.log   # una tarea y termina
+dsh headless --json "<consulta>"                                # eventos de la corrida
+dsh headless --session-id <id> "<seguí>"                        # retoma una sesión guardada
+```
+
+- **Corre con el usuario y la config de quien lo llama** (modelo `deepseek-flash` hoy). La
+  instancia web `dsh-<usuario>` es otro proceso.
+- 🪤 **No tiene sandbox de sólo lectura** (no hay un equivalente a `codex exec -s
+  read-only`). Para una revisión, la consigna de no escribir va **en el pedido**, y se
+  corre sobre una **copia de trabajo con git**, para detectar con `git status` si escribió.
+- 🪤 **El razonamiento sale por stderr** y es largo (cientos de KB): separá stdout, que es la
+  respuesta, de stderr.
+- **Rendimiento medido** (revisión adversarial de un diff Go de 3.100 líneas, 2026-10-10):
+  11 minutos, respetó la consigna de no escribir, citó archivo:línea y trajo 2 hallazgos
+  reales de severidad media que la revisión de estándares no había visto. Como con Codex,
+  **lo que trae se audita antes de darlo por bueno** (pasos 2 y 4 del ciclo).
 
 ### Cuándo delegar a Codex — disparadores, no criterio
 
@@ -259,6 +335,7 @@ Si se cumple alguno, delegar deja de ser opcional:
 | Segundo intento fallido del mismo diagnóstico | `/codex:rescue --background` |
 | Código de autenticación, pagos o datos personales | `/codex:adversarial-review` |
 | El usuario pide "que opine otro modelo" | el que corresponda, arriba |
+| Codex sin cuota | lo mismo con `dsh headless` (ver § DSH) |
 
 **Lo que Codex no debe hacer:** reescribir una herramienta que ya existe en el stack. Si
 la tarea es convertir archivos, Codex **corre `pdf2md-local`**; no programa un conversor.
@@ -473,7 +550,7 @@ Las lecturas y herramientas activadas deben confirmarse brevemente al usuario, i
 qué protocolo, memoria y skills/agentes quedaron activos y qué información sigue pendiente.
 
 Pasos:
-1. Leer el `CLAUDE.md`/`AGENTS.md` del proyecto.
+1. Ubicar el proyecto en `$WORKSPACE/PROYECTOS.md` (qué es y sus límites) y leer su `CLAUDE.md`/`AGENTS.md`.
 2. Leer la memoria del proyecto (`.agent-zero/memory-bank/`) → índice + reglas + contexto activo.
 3. Leer decisiones del usuario (`~/.claude/projects/<slug>/memory/MEMORY.md`).
 4. **Consultar el Memory Vault compartido** (lo que dejaron los otros asistentes):

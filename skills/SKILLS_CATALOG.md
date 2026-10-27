@@ -1,6 +1,6 @@
 # Skills Catalog — cerebro compartido (.ai-stack/skills)
 
-> ⚙️ AUTO-GENERADO por `scripts/gen-catalogs.sh` el 2026-10-03. NO editar a mano — se sobrescribe.
+> ⚙️ AUTO-GENERADO por `scripts/gen-catalogs.sh` el 2026-10-27. NO editar a mano — se sobrescribe.
 > Es el mismo listado para Claude Code, OpenCode, Codex, Gemini y Copilot. Invocación en Claude Code: `/skill <nombre>`; en los demás, pedir que lean `$AISTACK_HOME/skills/<nombre>/SKILL.md`. Ubicación: `~/.claude/skills/` → `$AISTACK_HOME/skills/`.
 
 ## Skills top-level (individuales)
@@ -124,6 +124,7 @@
 | `doubt-driven-development` | `/skill doubt-driven-development` | Subjects every non-trivial decision to a fresh-context adversarial review before it stands. Use when correctness matters more than speed, when working in unfamiliar code, |
 | `e2e-testing` | `/skill e2e-testing` | Playwright E2E testing patterns, Page Object Model, configuration, CI/CD integration, artifact management, and flaky test strategies. Use when writing Playwright tests, s |
 | `emails` | `/skill emails` | When the user wants to create or optimize an email sequence, drip campaign, automated email flow, or lifecycle email program. Also use when the user mentions "email seque |
+| `engineering-standards` | `/skill engineering-standards` | Estándar obligatorio de código (Clean Code, SOLID, design patterns, Clean Architecture) con niveles proporcionales al tamaño. Usar ANTES de escribir, editar, delegar o |
 | `eradicating-malware-from-infected-systems` | `/skill eradicating-malware-from-infected-systems` | Systematically map and remove malware, backdoors, and attacker persistence |
 | `evaluation` | `/skill evaluation` | This skill should be used when building agent evaluation systems: deterministic checks, regression suites, multi-dimensional rubrics, quality gates, production monitoring |
 | `executing-active-directory-attack-simulation` | `/skill executing-active-directory-attack-simulation` | Executes authorized attack simulations against Active Directory environments |
@@ -379,7 +380,7 @@
 | `scanning-iac-and-images-with-trivy` | `/skill scanning-iac-and-images-with-trivy` | Scans container images, Infrastructure-as-Code (Terraform, CloudFormation, |
 | `scanning-infrastructure-with-nessus` | `/skill scanning-infrastructure-with-nessus` | Tenable Nessus is the industry-leading vulnerability scanner used to |
 | `schema` | `/skill schema` | When the user wants to add, fix, or optimize schema markup and structured data on their site. Also use when the user mentions "schema markup," "structured data," "JSON-LD |
-| `second-opinion` | `/skill second-opinion` | Consultar a Codex, Gemini o Copilot como par para una segunda opinión, revisión o enfoque alternativo. Usar en decisiones de arquitectura no triviales, revisión de cam |
+| `second-opinion` | `/skill second-opinion` | Consultar a Codex, DSH (DeepSeek Harness), Gemini o Copilot como par para una segunda opinión, revisión o enfoque alternativo. Usar en decisiones de arquitectura no tri |
 | `securing-github-actions-workflows` | `/skill securing-github-actions-workflows` | Hardens GitHub Actions workflows against supply chain attacks, credential |
 | `security-and-hardening` | `/skill security-and-hardening` | Hardens code against vulnerabilities. Use when handling user input, authentication, data storage, or external integrations. Use when building any feature that accepts unt |
 | `security-scan-verified` | `/skill security-scan-verified` | Escaneo profundo de vulnerabilidades del código propio, por niveles de esfuerzo, donde cada hallazgo se cuestiona antes de reportarlo y el conteo final lo calcula un scr |

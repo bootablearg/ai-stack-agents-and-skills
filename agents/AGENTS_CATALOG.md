@@ -1,10 +1,10 @@
 # Agents Catalog — cerebro compartido (.ai-stack/agents)
 
-> ⚙️ AUTO-GENERADO por `scripts/gen-catalogs.sh` el 2026-10-03. NO editar a mano — se sobrescribe.
+> ⚙️ AUTO-GENERADO por `scripts/gen-catalogs.sh` el 2026-10-27. NO editar a mano — se sobrescribe.
 > Invocación: `"Activate <Agente> mode"` o `"<Agente>, <tarea>"`. Ubicación: `~/.claude/agents/` → `$AISTACK_HOME/agents/`.
 > Librería fuente categorizada (más amplia): `$AISTACK_HOME/agents-lib/`.
 
-**Total: 233 agentes activos.**
+**Total: 234 agentes activos.**
 
 ## marketing
 
@@ -362,6 +362,12 @@
 | Agente | Descripción |
 |--------|-------------|
 | `Study Abroad Advisor` | Full-spectrum study abroad planning expert covering the US, UK, Canada, Australia, Europe, Hong Kong, and Singapore — proficient in undergraduate, master's, and PhD app |
+
+## standards
+
+| Agente | Descripción |
+|--------|-------------|
+| `standards-reviewer` | Revisar un diff o archivos contra el estándar engineering-standards antes de dar un cambio N2/N3 por terminado. |
 
 ## schema
 

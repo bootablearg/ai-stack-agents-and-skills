@@ -152,6 +152,13 @@ de verdad: marcar como cerrado algo que no cerraste es peor que no marcar nada.
 
 `node doc-debt.js check` para confirmar que quedó en cero.
 
+Después, regenerar el índice de proyectos (actualiza bitácoras, última fecha y último cierre;
+si cambiaste la cabecera de un `projectbrief.md`, también lo toma):
+
+```bash
+python3 $AISTACK_HOME/scripts/gen-proyectos.py
+```
+
 ## Paso 5 — Resumen
 
 Tres líneas: qué se escribió, dónde, y qué quedó pendiente. Sin adorno.
